@@ -1,0 +1,11 @@
+-- Nascore PostgreSQL Veritabanı Tabloları Silme Scripti
+-- DİKKAT: Bu script çalıştırıldığında içindeki verilerle birlikte tablolar kalıcı olarak silinir!
+
+DROP TABLE IF EXISTS "ContactMessage";
+DROP TABLE IF EXISTS "ProjectItem";
+DROP TABLE IF EXISTS "ProjectCategory";
+DROP TABLE IF EXISTS "Testimonial";
+DROP TABLE IF EXISTS "Skill";
+DROP TABLE IF EXISTS "ServiceItem";
+DROP TABLE IF EXISTS "Feature";
+DROP TABLE IF EXISTS "News";

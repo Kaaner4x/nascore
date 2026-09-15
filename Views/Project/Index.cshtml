@@ -1,3 +1,4 @@
+@model Nascore.ViewModels.ProjectViewModel
 @{
     ViewData["Title"] = "Projelerimiz";
 }
@@ -6,7 +7,7 @@
 	<div class="container">
 		<div class="row justify-content-center">
 			<div class="col-lg-8 text-center">
-				<h2><span class="text-color">Tasarım Çözümleri</span> Sunuyorum. <br>Çalışmalarım burada sunulmuştur, aşağıdan inceleyebilirsiniz.</h2>
+				<h2><span class="text-color">@Model.BannerTitlePart1</span> @Model.BannerTitlePart2 <br>@Model.BannerDescription</h2>
 			</div>
 		</div>
 	</div>
@@ -20,118 +21,63 @@
 		          <label class="btn active ">
 		            <input type="radio" name="shuffle-filter" value="all" checked="checked" />Tüm Projeler
 		          </label>
-		          <label class="btn">
-		            <input type="radio" name="shuffle-filter" value="design" />UI/UX Tasarım
-		          </label>
-		          <label class="btn">
-		            <input type="radio" name="shuffle-filter" value="branding" />Marka Kimliği
-		          </label>
-		          <label class="btn">
-		            <input type="radio" name="shuffle-filter" value="illustration" />Web Geliştirme
-		          </label>
-		           <label class="btn">
-		            <input type="radio" name="shuffle-filter" value="photo" />Fotoğrafçılık
-		          </label>
+                  @foreach(var cat in Model.Categories)
+                  {
+		            <label class="btn">
+		                <input type="radio" name="shuffle-filter" value="@cat.FilterValue" />@cat.Name
+		            </label>
+                  }
 		        </div>
 	      	</div>
     	</div>	
 
 		<div class="row shuffle-wrapper portfolio-gallery">
-	      <div class="col-lg-4 col-6 mb-4 shuffle-item"  data-groups="[&quot;design&quot;,&quot;illustration&quot;]">
-		      	<div class="position-relative inner-box">
-		          <div class="image position-relative ">
-	               <img src="~/user-interface/images/portfolio/1.jpg" alt="portfolio-image" class="img-fluid w-100 d-block">
-	                <a class="overlay-box" asp-controller="Project" asp-action="Detail" asp-route-id="1">
-	                  <div class="overlay-inner">
-	                    <div class="overlay-content">
-	                      <h5 class="mb-0 ">Resim & Çizim</h5>
-	                      <p>Tasarım</p>
-	                    </div>
-	                  </div> 
-	                </a>
-	            </div>
-		      </div>
-	      </div>
-
-	      <div class="col-lg-4 col-6 mb-4 shuffle-item" data-groups="[&quot;branding&quot;]">
-	        <div class="position-relative inner-box" >
-	            <div class="image position-relative ">
-	               <img src="~/user-interface/images/portfolio/bag.jpg" alt="portfolio-image" class="img-fluid w-100 d-block">
-	                <a class="overlay-box" asp-controller="Project" asp-action="Detail" asp-route-id="2">
-	                  <div class="overlay-inner">
-	                    <div class="overlay-content">
-	                      <h5 class="mb-0">Web Uygulaması</h5>
-	                      <p>E-Ticaret</p>
-	                    </div>
-		                </div> 
-		            </a>
-		        </div>
-		      </div>
-	      </div>
-
-	      <div class="col-lg-4 col-6 mb-4 shuffle-item" data-groups="[&quot;illustration&quot;]">
-	        <div class="position-relative inner-box">
-	            <div class="image position-relative ">
-	               <img src="~/user-interface/images/portfolio/3.jpg" alt="portfolio-image" class="img-fluid w-100 d-block">
-	                <a class="overlay-box" asp-controller="Project" asp-action="Detail" asp-route-id="3">
-	                  <div class="overlay-inner">
-	                    <div class="overlay-content">
-	                      <h5 class="mb-0">Kurumsal </h5>
-	                      <p>Pazarlama</p>
-	                    </div>
-	                  </div> 
-	                </a>
-	            </div>
-	        </div>
-	      </div>
-
-	      <div class="col-lg-4 col-6 mb-4 shuffle-item" data-groups="[&quot;design&quot;,&quot;branding&quot;]">
-	        <div class="position-relative inner-box">
-	            <div class="image position-relative ">
-	               <img src="~/user-interface/images/portfolio/m-3.jpg" alt="portfolio-image" class="img-fluid w-100 d-block">
-	                <a class="overlay-box" asp-controller="Project" asp-action="Detail" asp-route-id="4">
-	                  <div class="overlay-inner">
-	                    <div class="overlay-content">
-	                      <h5 class="mb-0">Portfolyo</h5>
-	                      <p>Tasarım</p>
-	                    </div>
-	                  </div> 
-	                </a>
-	            </div>
-	        </div>
-	      </div>
-
-	      <div class="col-lg-4 col-6 mb-4 shuffle-item" data-groups="[&quot;illustration&quot;]">
-	        <div class="position-relative inner-box">
-	            <div class="image position-relative ">
-	               <img src="~/user-interface/images/portfolio/bottle.jpg" alt="portfolio-image" class="img-fluid w-100 d-block">
-	                <a class="overlay-box" asp-controller="Project" asp-action="Detail" asp-route-id="5">
-	                  <div class="overlay-inner">
-	                    <div class="overlay-content">
-	                       <h5 class="mb-0">Modern Web</h5>
-	                      	<p>SEO</p>
-	                    </div>
-	                  </div> 
-	                </a>
-	            </div>
-	        </div>
-	      </div>
-
-	      <div class="col-lg-4 col-6 mb-4 shuffle-item" data-groups="[&quot;design&quot;,&quot;photo&quot;]">
-	        <div class="position-relative inner-box">
-	            <div class="image position-relative ">
-	               <img src="~/user-interface/images/portfolio/6.jpg" alt="portfolio-image" class="img-fluid w-100 d-block">
-	                <a class="overlay-box" asp-controller="Project" asp-action="Detail" asp-route-id="6">
-	                  <div class="overlay-inner">
-	                    <div class="overlay-content">
-	                       <h5 class="mb-0">Ajans Web</h5>
-	                      	<p>Tasarım</p>
-	                    </div>
-	                  </div> 
-	                </a>
-	            </div>
-	        </div>
-	      </div>
+          @foreach(var project in Model.Projects)
+          {
+              var groups = string.Join("&quot;,&quot;", project.FilterGroups);
+              groups = "[&quot;" + groups + "&quot;]";
+              
+	          <div class="col-lg-4 col-6 mb-4 shuffle-item" data-groups="@Html.Raw(groups)">
+		      	  <div class="position-relative inner-box">
+		              <div class="image position-relative ">
+	                  <img src="@project.ImageUrl" alt="@project.Title" class="img-fluid w-100 d-block">
+	                   <a class="overlay-box" asp-controller="Project" asp-action="Detail" asp-route-id="@project.Id">
+	                     <div class="overlay-inner">
+	                       <div class="overlay-content">
+	                         <h5 class="mb-0 ">@project.Title</h5>
+	                         <p>@project.SubTitle</p>
+	                       </div>
+	                     </div> 
+	                   </a>
+	               </div>
+		         </div>
+	         </div>
+          }
 	    </div>
+
+        <!-- Pagination (Haberler sayfasından eklendi) -->
+        <div class="row mt-5">
+            <div class="col-lg-12">
+                <div class="pagination text-center">
+                    <ul class="list-inline d-block mx-auto mb-0">
+                        <li class="list-inline-item">
+                            <a href="#!">Önceki</a>
+                        </li>
+                        
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <li class="list-inline-item @(i == Model.CurrentPage ? "active" : "")">
+                                <a href="#!"><span>@i</span></a>
+                            </li>
+                        }
+
+                        <li class="list-inline-item">
+                            <a href="#!">Sonraki</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
 	</div>
 </section>

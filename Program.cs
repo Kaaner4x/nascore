@@ -1,7 +1,19 @@
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
+using System.Data;
+using Npgsql;
+
+// .env dosyasını sisteme yükler (Local geliştirme için)
+DotNetEnv.Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Dapper için PostgreSQL veritabanı bağlantısını sisteme (DI Container) ekle
+builder.Services.AddScoped<IDbConnection>(sp => 
+    new NpgsqlConnection(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
+
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
