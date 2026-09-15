@@ -1,13 +1,21 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nascore.Models;
 using Nascore.ViewModels;
+using Nascore.Services.Abstract;
 using System;
+using System.Threading.Tasks;
 
 namespace Nascore.Controllers
 {
     public class ContactController : Controller
     {
-        // Sayfa ilk açıldığında çalışacak GET metodu
+        private readonly IContactMessageService _contactService;
+
+        public ContactController(IContactMessageService contactService)
+        {
+            _contactService = contactService;
+        }
+
         [HttpGet]
         public IActionResult Index()
         {
@@ -15,21 +23,16 @@ namespace Nascore.Controllers
             return View(model);
         }
 
-        // Form gönderildiğinde çalışacak POST metodu
         [HttpPost]
-        public IActionResult Index(ContactViewModel model)
+        public async Task<IActionResult> Index(ContactViewModel model)
         {
-            // Eğer modeldeki (özellikle Form kısmındaki) DataAnnotation kuralları ihlal edildiyse
             if (!ModelState.IsValid)
             {
-                // Statik metinler POST ile gelmeyeceği için tekrar doldurmamız gerekir
                 var refreshedModel = GetContactViewModel();
-                refreshedModel.Form = model.Form; // Kullanıcının girdiği hatalı veriyi silmemek için
-                
+                refreshedModel.Form = model.Form; 
                 return View(refreshedModel);
             }
 
-            // Doğrulama başarılıysa: Gelen veriyi asıl veritabanı modeline (ContactMessage) aktar
             var newMessage = new ContactMessage
             {
                 Name = model.Form.Name,
@@ -38,21 +41,17 @@ namespace Nascore.Controllers
                 Subject = model.Form.Subject,
                 Message = model.Form.Message,
                 IsKvkkAccepted = model.Form.IsKvkkAccepted,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.UtcNow
             };
 
-            // Burada veritabanına kaydetme işlemi yapılır
-            // _context.ContactMessages.Add(newMessage);
-            // _context.SaveChanges();
+            // Hizmet katmanı üzerinden veritabanına kayıt işlemi (Validasyonlar Service içinde yapılır)
+            await _contactService.AddAsync(newMessage);
 
-            // Başarılı bir şekilde kaydedildiğine dair TempData ile mesaj gönderilebilir
             TempData["SuccessMessage"] = "Mesajınız başarıyla iletildi. En kısa sürede size dönüş yapacağız.";
 
-            // Formun içini boşaltıp sayfayı yenilemek için Redirect
             return RedirectToAction("Index");
         }
 
-        // Statik verileri her defasında yazmamak için yardımcı bir metot
         private ContactViewModel GetContactViewModel()
         {
             return new ContactViewModel

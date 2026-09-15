@@ -1,3 +1,4 @@
+@model Nascore.ViewModels.HomeViewModel
 @{
     ViewData["Title"] = "Ana Sayfa";
 }
@@ -27,6 +28,7 @@
                 </div>
             </div>
 
+            <!-- Sağ Taraftaki Öne Çıkan Görsel / İllüstrasyon -->
             <div class="col-lg-5 mt-5 mt-lg-0 text-center">
                 <div class="hero-image-wrapper">
                     <img src="~/user-interface/images/home-2.webp" width="480" height="380" fetchpriority="high" alt="Nascore Dijital Tasarım ve Web Teknolojileri" class="img-fluid hero-img">
@@ -34,9 +36,9 @@
                         <div class="badge-icon">
                             <i class="ti-check" aria-hidden="true"></i>
                         </div>
-                        <div class="badge-content text-left">
-                            <strong>%100 Memnuniyet</strong>
-                            <span>Özgün & Profesyonel</span>
+                        <div class="badge-text">
+                            <span class="font-weight-bold d-block">%100</span>
+                            <span class="text-muted text-sm">Müşteri Memnuniyeti</span>
                         </div>
                     </div>
                 </div>
@@ -46,200 +48,119 @@
 </section>
 <!-- Banner End -->
 
-    <!-- Haberler Başlık Start -->
-    <section id="haberler" class="page-title pt-4 pb-0">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="text-center">
-                        <h2 class="text-capitalize mb-0 text-lg">Haberler</h2>
-                    </div>
-                </div>
+<!-- Haberler Listesi Start -->
+<section class="section blog-list pt-4 pb-5">
+    <div class="container">
+        <!-- Section Header -->
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h2 class="mb-2">Güncel Haberler ve Duyurular</h2>
+                <p>Sektörel gelişmeler, yeni projelerimiz ve teknoloji trendleri hakkında en güncel yazılarımız.</p>
             </div>
         </div>
-    </section>
-    <!-- Haberler Başlık End -->
 
-    <!-- Haberler Listesi Start -->
-    <section class="section blog-post pt-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
+        <div class="row">
+            <!-- Sol Ana Sütun (Son Haberler - Kart Yapısı) -->
+            <div class="col-lg-8">
+                <div class="row">
+                    @foreach (var newsItem in Model.LatestNews)
+                    {
+                        <div class="col-md-6 mb-5">
+                            <article class="blog-post-card h-100 d-flex flex-column">
+                                <div class="post-image-wrapper mb-3 overflow-hidden rounded">
+                                    <a asp-controller="News" asp-action="Detail" asp-route-id="@newsItem.Id">
+                                        <img src="@newsItem.ImageUrl" alt="@newsItem.Title" class="img-fluid w-100 post-image" loading="lazy" decoding="async">
+                                    </a>
+                                </div>
+                                <div class="post-content-wrapper d-flex flex-column flex-grow-1">
+                                    <div class="post-meta mb-2 d-flex align-items-center text-muted text-sm">
+                                        <span class="post-category text-color font-weight-bold mr-3">@newsItem.Category</span>
+                                        <span class="post-date"><i class="ti-calendar mr-1" aria-hidden="true"></i>@newsItem.PublishedDate.ToString("dd MMMM yyyy")</span>
+                                    </div>
+                                    <a asp-controller="News" asp-action="Detail" asp-route-id="@newsItem.Id" class="post-title-link">
+                                        <h3 class="h4 mb-3">@newsItem.Title</h3>
+                                    </a>
+                                    <a asp-controller="News" asp-action="Detail" asp-route-id="@newsItem.Id" class="read-more-link mt-auto font-weight-bold">
+                                        Devamını Oku <i class="ti-angle-right ml-1" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </article>
+                        </div>
+                    }
+                </div>
+                
+                <!-- Sayfalama (Pagination) Alanı -->
+                @if (Model.TotalPages > 1)
+                {
                     <div class="row">
-                        <div class="col-lg-6 col-md-6 mb-4">
-                            <article class="post h-100">
-                                <div class="image-content">
-                                    <a asp-controller="News" asp-action="Detail" asp-route-id="1" tabindex="-1" aria-hidden="true">
-                                        <img src="~/user-interface/images/blog/minimal-1.jpg" alt="Yeni projeler ve sektörel gelişmeler hakkında duyuru görseli" class="img-fluid" loading="lazy" decoding="async">
-                                    </a>
-                                </div>
-                                <div class="post-content">
-                                    <div class="post-meta">
-                                        <span class="date text-sm"><i class="ti-calendar mr-1" aria-hidden="true"></i>17 Haziran 2024</span>
-                                        <span class="meta-dot" aria-hidden="true">•</span>
-                                        <span class="category text-sm">Tasarım</span>
-                                    </div>
-                                    <a asp-controller="News" asp-action="Detail" asp-route-id="1">
-                                        <h3 class="h4">Yeni projeler ve sektörel gelişmeler hakkında önemli duyurular.</h3>
-                                    </a>
-                                </div>
-                            </article>
-                        </div>
+                        <div class="col-lg-12">
+                            <div class="pagination text-center">
+                                <ul class="list-inline d-block mx-auto mb-0">
+                                    @if (Model.CurrentPage > 1)
+                                    {
+                                        <li class="list-inline-item">
+                                            <a asp-controller="Home" asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)">Önceki</a>
+                                        </li>
+                                    }
+                                    
+                                    @for (int i = 1; i <= Model.TotalPages; i++)
+                                    {
+                                        <li class="list-inline-item @(i == Model.CurrentPage ? "active" : "")">
+                                            <a asp-controller="Home" asp-action="Index" asp-route-page="@i"><span>@i</span></a>
+                                        </li>
+                                    }
 
-                        <div class="col-lg-6 col-md-6 mb-4">
-                            <article class="post h-100">
-                                <div class="image-content">
-                                    <a asp-controller="News" asp-action="Detail" asp-route-id="2" tabindex="-1" aria-hidden="true">
-                                        <img src="~/user-interface/images/blog/minimal-2.jpg" alt="Modern web ve tasarım trendleri görseli" class="img-fluid" loading="lazy" decoding="async">
-                                    </a>
-                                </div>
-                                <div class="post-content">
-                                    <div class="post-meta">
-                                        <span class="date text-sm"><i class="ti-calendar mr-1" aria-hidden="true"></i>15 Haziran 2024</span>
-                                        <span class="meta-dot" aria-hidden="true">•</span>
-                                        <span class="category text-sm">Teknoloji</span>
-                                    </div>
-                                    <a asp-controller="News" asp-action="Detail" asp-route-id="2">
-                                        <h3 class="h4">Modern web ve tasarım trendlerinde öne çıkan yenilikler.</h3>
-                                    </a>
-                                </div>
-                            </article>
-                        </div>
-
-                        <div class="col-lg-6 col-md-6 mb-4">
-                            <article class="post h-100">
-                                <div class="image-content">
-                                    <a asp-controller="News" asp-action="Detail" asp-route-id="3" tabindex="-1" aria-hidden="true">
-                                        <img src="~/user-interface/images/blog/minimal-3.jpg" alt="Kullanıcı deneyimi odaklı arayüz tasarımı görseli" class="img-fluid" loading="lazy" decoding="async">
-                                    </a>
-                                </div>
-                                <div class="post-content">
-                                    <div class="post-meta">
-                                        <span class="date text-sm"><i class="ti-calendar mr-1" aria-hidden="true"></i>10 Haziran 2024</span>
-                                        <span class="meta-dot" aria-hidden="true">•</span>
-                                        <span class="category text-sm">UX / UI</span>
-                                    </div>
-                                    <a asp-controller="News" asp-action="Detail" asp-route-id="3">
-                                        <h3 class="h4">Kullanıcı deneyimi odaklı arayüz tasarımı çözümleri.</h3>
-                                    </a>
-                                </div>
-                            </article>
-                        </div>
-
-                        <div class="col-lg-6 col-md-6 mb-4">
-                            <article class="post h-100">
-                                <div class="image-content">
-                                    <a asp-controller="News" asp-action="Detail" asp-route-id="4" tabindex="-1" aria-hidden="true">
-                                        <img src="~/user-interface/images/blog/minimal-4.jpg" alt="Geliştirme süreçlerinde verimlilik görseli" class="img-fluid" loading="lazy" decoding="async">
-                                    </a>
-                                </div>
-                                <div class="post-content">
-                                    <div class="post-meta">
-                                        <span class="date text-sm"><i class="ti-calendar mr-1" aria-hidden="true"></i>05 Haziran 2024</span>
-                                        <span class="meta-dot" aria-hidden="true">•</span>
-                                        <span class="category text-sm">Yazılım</span>
-                                    </div>
-                                    <a asp-controller="News" asp-action="Detail" asp-route-id="4">
-                                        <h3 class="h4">Geliştirme süreçlerinde verimliliği artıran yeni yaklaşımlar.</h3>
-                                    </a>
-                                </div>
-                            </article>
+                                    @if (Model.CurrentPage < Model.TotalPages)
+                                    {
+                                        <li class="list-inline-item">
+                                            <a asp-controller="Home" asp-action="Index" asp-route-page="@(Model.CurrentPage + 1)">Sonraki</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="col-lg-4">
-                    <div class="sidebar-widget mt-5 mt-lg-0">
-                        <div class="widget mb-5 follow">
-                            <h3 class="h4 mb-4 widget-title">Bizi Takip Edin</h3>
-                            <ul class="list-inline">
-                                <li class="list-inline-item"><a href="#!" aria-label="Facebook Sayfası"><i class="ti-facebook" aria-hidden="true"></i></a></li>
-                                <li class="list-inline-item"><a href="#!" aria-label="Twitter Profili"><i class="ti-twitter" aria-hidden="true"></i></a></li>
-                                <li class="list-inline-item"><a href="#!" aria-label="GitHub Profili"><i class="ti-github" aria-hidden="true"></i></a></li>
-                                <li class="list-inline-item"><a href="#!" aria-label="LinkedIn Profili"><i class="ti-linkedin" aria-hidden="true"></i></a></li>
-                                <li class="list-inline-item"><a href="#!" aria-label="Pinterest Profili"><i class="ti-pinterest" aria-hidden="true"></i></a></li>
-                                <li class="list-inline-item"><a href="#!" aria-label="Dribbble Profili"><i class="ti-dribbble" aria-hidden="true"></i></a></li>
-                            </ul>
-                        </div>
-
-                        <div class="widget mb-5">
-                            <h3 class="h4 mb-4 widget-title">Popüler Haberler</h3>
-                            <ul class="list-unstyled mb-0">
-                                <li class="d-flex mb-4 align-items-center">
-                                    <img src="~/user-interface/images/blog/s-1.jpg" alt="Yeni tasarım ilkeleri küçük görsel" class="img-fluid mr-3 popular-post-img" loading="lazy" decoding="async">
-                                    <div class="post-body">
-                                        <span class="text-muted d-block text-sm"><i class="ti-calendar mr-1" aria-hidden="true"></i>18 Haziran 2024</span>
-                                        <a asp-controller="News" asp-action="Detail" asp-route-id="5">
-                                            <h4 class="h5">Sektörde çığır açan yeni tasarım ilkeleri</h4>
-                                        </a>
-                                    </div>
-                                </li>
-                                <li class="d-flex mb-4 align-items-center">
-                                    <img src="~/user-interface/images/blog/s-2.jpg" alt="Dijital dönüşüm rehberi küçük görsel" class="img-fluid mr-3 popular-post-img" loading="lazy" decoding="async">
-                                    <div class="post-body">
-                                        <span class="text-muted d-block text-sm"><i class="ti-calendar mr-1" aria-hidden="true"></i>16 Haziran 2024</span>
-                                        <a asp-controller="News" asp-action="Detail" asp-route-id="6">
-                                            <h4 class="h5">Dijital dönüşümde dikkat edilmesi gerekenler</h4>
-                                        </a>
-                                    </div>
-                                </li>
-                                <li class="d-flex mb-4 align-items-center">
-                                    <img src="~/user-interface/images/blog/s-1.jpg" alt="Kullanıcı deneyimi ipuçları küçük görsel" class="img-fluid mr-3 popular-post-img" loading="lazy" decoding="async">
-                                    <div class="post-body">
-                                        <span class="text-muted d-block text-sm"><i class="ti-calendar mr-1" aria-hidden="true"></i>12 Haziran 2024</span>
-                                        <a asp-controller="News" asp-action="Detail" asp-route-id="7">
-                                            <h4 class="h5">Etkili kullanıcı deneyimi için kritik ipuçları</h4>
-                                        </a>
-                                    </div>
-                                </li>
-                                <li class="d-flex mb-4 align-items-center">
-                                    <img src="~/user-interface/images/blog/s-2.jpg" alt="2026 web trendleri küçük görsel" class="img-fluid mr-3 popular-post-img" loading="lazy" decoding="async">
-                                    <div class="post-body">
-                                        <span class="text-muted d-block text-sm"><i class="ti-calendar mr-1" aria-hidden="true"></i>09 Haziran 2024</span>
-                                        <a asp-controller="News" asp-action="Detail" asp-route-id="8">
-                                            <h4 class="h5">2026 web geliştirme trendleri ve yenilikler</h4>
-                                        </a>
-                                    </div>
-                                </li>
-                                <li class="d-flex align-items-center">
-                                    <img src="~/user-interface/images/blog/s-1.jpg" alt="Yapay zeka araçları küçük görsel" class="img-fluid mr-3 popular-post-img" loading="lazy" decoding="async">
-                                    <div class="post-body">
-                                        <span class="text-muted d-block text-sm"><i class="ti-calendar mr-1" aria-hidden="true"></i>04 Haziran 2024</span>
-                                        <a asp-controller="News" asp-action="Detail" asp-route-id="9">
-                                            <h4 class="h5">Yapay zeka araçlarının kreatif süreçlere etkisi</h4>
-                                        </a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                }
             </div>
 
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="pagination text-center">
-                        <ul class="list-inline d-block mx-auto mb-0">
-                            <li class="list-inline-item">
-                                <a href="#!">Önceki</a>
-                            </li>
-                            <li class="active list-inline-item">
-                                <a href="#!"><span>1</span></a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a href="#!"><span>2</span></a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a href="#!"><span>3</span></a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a href="#!">Sonraki</a>
-                            </li>
+            <!-- Sağ Sütun (Sidebar) -->
+            <div class="col-lg-4">
+                <div class="sidebar-widget pl-lg-4 mt-5 mt-lg-0">
+                    <!-- Bizi Takip Edin Widget -->
+                    <div class="widget mb-5 follow-widget">
+                        <h4 class="mb-4 widget-title">Bizi Takip Edin</h4>
+                        <ul class="list-inline mb-0 social-links">
+                            <li class="list-inline-item"><a href="#!" aria-label="Facebook Sayfası"><i class="ti-facebook" aria-hidden="true"></i></a></li>
+                            <li class="list-inline-item"><a href="#!" aria-label="Twitter Profili"><i class="ti-twitter" aria-hidden="true"></i></a></li>
+                            <li class="list-inline-item"><a href="#!" aria-label="GitHub Profili"><i class="ti-github" aria-hidden="true"></i></a></li>
+                            <li class="list-inline-item"><a href="#!" aria-label="LinkedIn Profili"><i class="ti-linkedin" aria-hidden="true"></i></a></li>
+                            <li class="list-inline-item"><a href="#!" aria-label="Pinterest Profili"><i class="ti-pinterest" aria-hidden="true"></i></a></li>
+                            <li class="list-inline-item"><a href="#!" aria-label="Dribbble Profili"><i class="ti-dribbble" aria-hidden="true"></i></a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Popüler Haberler Widget (Liste Yapısı) -->
+                    <div class="widget mb-5 popular-posts-widget">
+                        <h4 class="mb-4 widget-title">Popüler Haberler</h4>
+                        <ul class="list-unstyled mb-0">
+                            @foreach (var popular in Model.PopularNews)
+                            {
+                                <li class="d-flex mb-4 align-items-center">
+                                    <img src="@popular.ImageUrl" alt="@popular.Title" class="img-fluid mr-3 popular-post-img" loading="lazy" decoding="async">
+                                    <div class="post-body">
+                                        <span class="text-muted d-block text-sm"><i class="ti-calendar mr-1" aria-hidden="true"></i>@popular.PublishedDate.ToString("dd MMMM yyyy")</span>
+                                        <a asp-controller="News" asp-action="Detail" asp-route-id="@popular.Id">
+                                            <h4 class="h5">@popular.Title</h4>
+                                        </a>
+                                    </div>
+                                </li>
+                            }
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-<!-- Haberler Listesi End -->
 
+    </div>
+</section>
+<!-- Haberler Listesi End -->

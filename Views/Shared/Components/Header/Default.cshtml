@@ -1,0 +1,52 @@
+﻿@model List<Nascore.Models.MenuItem>
+
+<header class="navigation">
+    <div class="header-top ">
+        <div class="container">
+            <div class="row justify-content-between align-items-center">
+                <div class="col-lg-2 col-md-4">
+                    <div class="header-top-socials text-center text-lg-left text-md-left">
+                        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Nascore Facebook"><i class="ti-facebook" aria-hidden="true"></i></a>
+                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Nascore Twitter"><i class="ti-twitter" aria-hidden="true"></i></a>
+                        <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="Nascore GitHub"><i class="ti-github" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-10 col-md-8 text-center text-lg-right text-md-right">
+                    <div class="header-top-info mb-2 mb-md-0">
+                        <a href="tel:+902125550000">T: +90 (212) 555 00 00</a>
+                        <a href="mailto:merhaba@nascore.com"><i class="ti-email mr-2" aria-hidden="true"></i>merhaba@nascore.com</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg main-nav" id="navbar">
+        <div class="container">
+            <a class="navbar-brand brand-bukra-logo" href="/">
+                <img src="/user-interface/images/logo/nascore-text.svg" alt="Nascore" class="img-fluid bukra-logo-img">
+            </a>
+
+            <button class="navbar-toggler collapsed" type="button" data-toggle="collapse"
+                    data-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false"
+                    aria-label="Menüyü Aç/Kapat">
+                <span class="ti-menu"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarsExample09">
+                <ul class="navbar-nav ml-auto">
+                    @{
+                        var currentPath = ViewContext.HttpContext.Request.Path.Value;
+                    }
+                    @foreach (var item in Model)
+                    {
+                        bool isActive = currentPath == item.Url || (currentPath == "/" && item.Url == "/Home");
+                        <li class="nav-item @(isActive ? "active" : "")">
+                            <a class="nav-link" href="@item.Url">@item.Title</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

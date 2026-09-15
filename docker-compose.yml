@@ -1,10 +1,10 @@
 services:
-  # PostgreSQL Veritabanı
+  # PostgreSQL Database
   db:
     image: postgres:15-alpine
     container_name: nascore_db
     environment:
-      # Şifreler ve bilgiler GitHub'a gitmemesi için .env dosyasından çekiliyor
+      # Passwords and information are pulled from the .env file to prevent them from going to GitHub
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
@@ -13,6 +13,22 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./Scripts:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+
+  # ASP.NET Core Web Application
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nascore_web
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      # Inside Docker network, we must use 'Host=db' and internal port '5432'
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+    depends_on:
+      - db
     restart: unless-stopped
 
 volumes:

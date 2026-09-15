@@ -5,6 +5,9 @@ namespace Nascore.ViewModels;
 
 public class HomeViewModel
 {
-    public List<News> LatestNews { get; set; } = [];
-    public List<News> PopularNews { get; set; } = [];
+    public List<News> LatestNews { get; set; } = new List<News>();
+    public List<News> PopularNews { get; set; } = new List<News>();
+    
+    public int CurrentPage { get; set; } = 1;
+    public int TotalPages { get; set; } = 1;
 }

@@ -1,46 +1,61 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Nascore.ViewModels;
+using Nascore.Services.Abstract;
+using System;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace Nascore.Controllers
 {
     public class ProjectController : Controller
     {
-        public IActionResult Index()
+        private readonly IProjectCategoryService _categoryService;
+        private readonly IProjectItemService _projectService;
+
+        public ProjectController(IProjectCategoryService categoryService, IProjectItemService projectService)
         {
-            var model = new Nascore.ViewModels.ProjectViewModel
+            _categoryService = categoryService;
+            _projectService = projectService;
+        }
+
+        public async Task<IActionResult> Index(int page = 1)
+        {
+            int pageSize = 6;
+            var categories = await _categoryService.GetAllAsync();
+            var allProjects = await _projectService.GetAllAsync();
+
+            var totalProjects = allProjects.Count();
+            var totalPages = (int)Math.Ceiling(totalProjects / (double)pageSize);
+            
+            if(page < 1) page = 1;
+            if(page > totalPages && totalPages > 0) page = totalPages;
+
+            var pagedProjects = allProjects.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            var model = new ProjectViewModel
             {
                 BannerTitlePart1 = "Tasarım Çözümleri",
                 BannerTitlePart2 = "Sunuyorum.",
                 BannerDescription = "Çalışmalarım burada sunulmuştur, aşağıdan inceleyebilirsiniz.",
                 
-                Categories = new System.Collections.Generic.List<Nascore.Models.ProjectCategory>
-                {
-                    new Nascore.Models.ProjectCategory { Id = 1, Name = "UI/UX Tasarım", FilterValue = "design" },
-                    new Nascore.Models.ProjectCategory { Id = 2, Name = "Marka Kimliği", FilterValue = "branding" },
-                    new Nascore.Models.ProjectCategory { Id = 3, Name = "Web Geliştirme", FilterValue = "illustration" },
-                    new Nascore.Models.ProjectCategory { Id = 4, Name = "Fotoğrafçılık", FilterValue = "photo" }
-                },
-                
-                Projects = new System.Collections.Generic.List<Nascore.Models.ProjectItem>
-                {
-                    new Nascore.Models.ProjectItem { Id = 1, Title = "Resim & Çizim", SubTitle = "Tasarım", ImageUrl = "/user-interface/images/portfolio/1.jpg", FilterGroups = new System.Collections.Generic.List<string> { "design", "illustration" } },
-                    new Nascore.Models.ProjectItem { Id = 2, Title = "Web Uygulaması", SubTitle = "E-Ticaret", ImageUrl = "/user-interface/images/portfolio/bag.jpg", FilterGroups = new System.Collections.Generic.List<string> { "branding" } },
-                    new Nascore.Models.ProjectItem { Id = 3, Title = "Kurumsal", SubTitle = "Pazarlama", ImageUrl = "/user-interface/images/portfolio/3.jpg", FilterGroups = new System.Collections.Generic.List<string> { "illustration" } },
-                    new Nascore.Models.ProjectItem { Id = 4, Title = "Portfolyo", SubTitle = "Tasarım", ImageUrl = "/user-interface/images/portfolio/m-3.jpg", FilterGroups = new System.Collections.Generic.List<string> { "design", "branding" } },
-                    new Nascore.Models.ProjectItem { Id = 5, Title = "Modern Web", SubTitle = "SEO", ImageUrl = "/user-interface/images/portfolio/bottle.jpg", FilterGroups = new System.Collections.Generic.List<string> { "illustration" } },
-                    new Nascore.Models.ProjectItem { Id = 6, Title = "Ajans Web", SubTitle = "Tasarım", ImageUrl = "/user-interface/images/portfolio/6.jpg", FilterGroups = new System.Collections.Generic.List<string> { "design", "photo" } }
-                },
+                Categories = categories.ToList(),
+                Projects = pagedProjects,
 
-                CurrentPage = 1,
-                TotalPages = 3
+                CurrentPage = page,
+                TotalPages = totalPages
             };
 
             return View(model);
         }
 
-        public IActionResult Detail(int id)
+        public async Task<IActionResult> Detail(int id)
         {
-            ViewBag.ProjectId = id;
-            return View();
+            var project = await _projectService.GetByIdAsync(id);
+            if (project == null)
+            {
+                return NotFound();
+            }
+            return View(project);
         }
     }
 }

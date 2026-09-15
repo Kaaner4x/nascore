@@ -8,5 +8,5 @@ public class ProjectItem
     public string? Title { get; set; }
     public string? SubTitle { get; set; } 
     public string? ImageUrl { get; set; } 
-    public List<string> FilterGroups { get; set; } = [];
+    public string[] FilterGroups { get; set; } = [];
 }

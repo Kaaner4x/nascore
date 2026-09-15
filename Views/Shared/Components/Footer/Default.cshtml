@@ -1,0 +1,41 @@
+﻿@model List<Nascore.Models.MenuItem>
+
+<footer class="footer">
+    <div class="container">
+        <div class="row ">
+            <div class="col-lg-6">
+                <p class="mb-0 text-white">
+                    © @DateTime.Now.Year <strong>Nascore</strong> - Tüm hakları saklıdır. <br>
+                    <small class="text-white-50">
+                        Tasarım Altyapısı: <a target="_blank" rel="noopener noreferrer" href="https://themefisher.com" class="text-white-50">Themefisher</a> & <a target="_blank" rel="noopener noreferrer" href="https://themewagon.com" class="text-white-50">ThemeWagon</a>
+                    </small>
+                </p>
+                @if(Model.Any()) {
+                    <ul class="list-inline mt-3">
+                        @foreach(var item in Model) {
+                            <li class="list-inline-item"><a href="@item.Url" class="text-white-50">@item.Title</a></li>
+                        }
+                    </ul>
+                }
+            </div>
+            <div class="col-lg-6">
+                <div class="widget footer-widget text-lg-right mt-5 mt-lg-0">
+                    <ul class="list-inline mb-0">
+                        @if(!string.IsNullOrEmpty(ViewBag.FacebookUrl)) {
+                            <li class="list-inline-item"><a href="@ViewBag.FacebookUrl" target="_blank" rel="noopener noreferrer" title="Facebook" aria-label="Facebook Sayfası"><i class="ti-facebook mr-3" aria-hidden="true"></i></a></li>
+                        }
+                        @if(!string.IsNullOrEmpty(ViewBag.TwitterUrl)) {
+                            <li class="list-inline-item"><a href="@ViewBag.TwitterUrl" target="_blank" rel="noopener noreferrer" title="Twitter" aria-label="Twitter Profili"><i class="ti-twitter mr-3" aria-hidden="true"></i></a></li>
+                        }
+                        @if(!string.IsNullOrEmpty(ViewBag.InstagramUrl)) {
+                            <li class="list-inline-item"><a href="@ViewBag.InstagramUrl" target="_blank" rel="noopener noreferrer" title="Instagram" aria-label="Instagram Profili"><i class="ti-instagram mr-3" aria-hidden="true"></i></a></li>
+                        }
+                        @if(!string.IsNullOrEmpty(ViewBag.LinkedInUrl)) {
+                            <li class="list-inline-item"><a href="@ViewBag.LinkedInUrl" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="LinkedIn Profili"><i class="ti-linkedin mr-3" aria-hidden="true"></i></a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
