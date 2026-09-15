@@ -203,3 +203,18 @@
 
 })(jQuery);
 
+
+// Nascore Premium Animations Script
+document.addEventListener('DOMContentLoaded', function() {
+    const siteHeader = document.getElementById('site-header');
+    
+    if(siteHeader) {
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 40) {
+                siteHeader.classList.add('scrolled');
+            } else {
+                siteHeader.classList.remove('scrolled');
+            }
+        });
+    }
+});

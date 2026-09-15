@@ -1,46 +1,78 @@
 ﻿@model List<Nascore.Models.MenuItem>
 
-<header class="navigation">
-    <div class="header-top ">
+<header id="site-header" class="site-header">
+    <!-- Header Top Bar (Minimal Style) -->
+    <div class="header-top-bar" id="header-top-bar">
         <div class="container">
-            <div class="row justify-content-between align-items-center">
-                <div class="col-lg-2 col-md-4">
-                    <div class="header-top-socials text-center text-lg-left text-md-left">
-                        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Nascore Facebook"><i class="ti-facebook" aria-hidden="true"></i></a>
-                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Nascore Twitter"><i class="ti-twitter" aria-hidden="true"></i></a>
-                        <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="Nascore GitHub"><i class="ti-github" aria-hidden="true"></i></a>
-                    </div>
+            <div class="row align-items-center">
+                <div class="col-md-7 col-12 text-center text-md-left">
+                    <ul class="list-inline mb-0 top-contact-info">
+                        <li class="list-inline-item mr-3">
+                            <a href="tel:@ViewBag.ContactPhone" aria-label="Telefon: @ViewBag.ContactPhone">
+                                <i class="ti-mobile mr-1" aria-hidden="true"></i>@ViewBag.ContactPhone
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="mailto:@ViewBag.ContactEmail" aria-label="E-Posta: @ViewBag.ContactEmail">
+                                <i class="ti-email mr-1" aria-hidden="true"></i>@ViewBag.ContactEmail
+                            </a>
+                        </li>
+                    </ul>
                 </div>
-                <div class="col-lg-10 col-md-8 text-center text-lg-right text-md-right">
-                    <div class="header-top-info mb-2 mb-md-0">
-                        <a href="tel:+902125550000">T: +90 (212) 555 00 00</a>
-                        <a href="mailto:merhaba@nascore.com"><i class="ti-email mr-2" aria-hidden="true"></i>merhaba@nascore.com</a>
-                    </div>
+                <div class="col-md-5 col-12 text-center text-md-right d-none d-md-block">
+                    <ul class="list-inline mb-0 top-social-links">
+                        @if(!string.IsNullOrEmpty(ViewBag.LinkedInUrl)) {
+                            <li class="list-inline-item"><a href="@ViewBag.LinkedInUrl" target="_blank" title="LinkedIn" aria-label="Nascore LinkedIn"><i class="ti-linkedin" aria-hidden="true"></i></a></li>
+                        }
+                        @if(!string.IsNullOrEmpty(ViewBag.InstagramUrl)) {
+                            <li class="list-inline-item"><a href="@ViewBag.InstagramUrl" target="_blank" title="Instagram" aria-label="Nascore Instagram"><i class="ti-instagram" aria-hidden="true"></i></a></li>
+                        }
+                        @if(!string.IsNullOrEmpty(ViewBag.TwitterUrl)) {
+                            <li class="list-inline-item"><a href="@ViewBag.TwitterUrl" target="_blank" title="Twitter" aria-label="Nascore Twitter"><i class="ti-twitter-alt" aria-hidden="true"></i></a></li>
+                        }
+                        @if(!string.IsNullOrEmpty(ViewBag.FacebookUrl)) {
+                            <li class="list-inline-item"><a href="@ViewBag.FacebookUrl" target="_blank" title="Facebook" aria-label="Nascore Facebook"><i class="ti-facebook" aria-hidden="true"></i></a></li>
+                        }
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 
-    <nav class="navbar navbar-expand-lg main-nav" id="navbar">
+    <nav class="navbar navbar-expand-xl main-nav" id="main-navbar">
         <div class="container">
             <a class="navbar-brand brand-bukra-logo" href="/">
-                <img src="/user-interface/images/logo/nascore-text.svg" alt="Nascore" class="img-fluid bukra-logo-img">
+                <img src="/items/logo/nascore-text.svg" alt="Nascore" class="img-fluid bukra-logo-img" id="header-logo-img">
             </a>
 
-            <button class="navbar-toggler collapsed" type="button" data-toggle="collapse"
+            <button class="navbar-toggler custom-toggler collapsed" type="button" data-toggle="collapse"
                     data-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false"
                     aria-label="Menüyü Aç/Kapat">
-                <span class="ti-menu"></span>
+                <div class="hamburger-lines">
+                    <span class="line line1"></span>
+                    <span class="line line2"></span>
+                    <span class="line line3"></span>
+                </div>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarsExample09">
                 <ul class="navbar-nav ml-auto">
                     @{
                         var currentPath = ViewContext.HttpContext.Request.Path.Value;
+                        if (string.IsNullOrEmpty(currentPath) || currentPath == "/") {
+                            currentPath = "/Home";
+                        }
                     }
                     @foreach (var item in Model)
                     {
-                        bool isActive = currentPath == item.Url || (currentPath == "/" && item.Url == "/Home");
+                        var urlForCompare = item.Url;
+                        if(urlForCompare == "/") urlForCompare = "/Home";
+                        
+                        bool isActive = currentPath.StartsWith(urlForCompare, System.StringComparison.OrdinalIgnoreCase);
+                        
+                        // Fix for exact match on /
+                        if(item.Url == "/" && currentPath != "/Home") isActive = false;
+
                         <li class="nav-item @(isActive ? "active" : "")">
                             <a class="nav-link" href="@item.Url">@item.Title</a>
                         </li>

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * WEBSITE: #!
  * TWITTER: #!
  * FACEBOOK: #!
@@ -2277,3 +2277,166 @@ textarea.contact-form-control {
   }
 }
 
+
+/* Nascore Custom UI Enhancements */
+
+/* Active Menu Indicator */
+.navbar-nav .nav-item.active .nav-link {
+    color: #007bff !important;
+    position: relative;
+}
+
+
+/* Project Cards Hover Effect */
+.portfolio-gallery .inner-box {
+    transition: all 0.3s ease;
+}
+.portfolio-gallery .inner-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+/* Nascore Remaining UX/UI Fixes */
+
+/* 1. Görsel Hiyerarşi & Tipografi: Modern Navbar Text */
+.navbar-nav .nav-link {
+    text-transform: capitalize !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.3px;
+}
+
+/* 2. Düzen (Layout) & Hizalama: Logo & Menü Orantısı */
+.navbar-brand .bukra-logo-img {
+    max-height: 40px; 
+    object-fit: contain;
+}
+.main-nav .navbar-collapse {
+    display: flex;
+    align-items: center;
+}
+.main-nav .navbar-nav {
+    align-items: center;
+}
+
+/* 3. Erişilebilirlik (WCAG): Footer Yazı Kontrastı */
+.footer .text-white-50 {
+    color: rgba(255, 255, 255, 0.8) !important; /* %50'den %80'e çıkarıldı */
+}
+
+/* Nascore Premium Animations */
+
+/* 1. Smart Sticky Glassmorphism Header */
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    transition: all 0.4s ease;
+    background-color: #fff;
+}
+.site-header.scrolled {
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+.site-header .header-top-bar {
+    transition: all 0.4s ease;
+    overflow: hidden;
+}
+.site-header.scrolled .header-top-bar {
+    height: 0 !important;
+    padding: 0 !important;
+    opacity: 0;
+}
+
+/* Push body down to prevent jump since header is fixed */
+body {
+    padding-top: 110px; /* Approximate header height */
+}
+
+/* 4. Logo Shrink Animation */
+#header-logo-img {
+    transition: all 0.4s ease;
+}
+.site-header.scrolled #header-logo-img {
+    max-height: 32px; /* shrink slightly */
+}
+
+/* 2. Menu Links Slide Hover Animation */
+.navbar-nav .nav-item .nav-link {
+    position: relative;
+}
+
+
+
+
+/* 3. Hamburger Menu Morph Animation */
+.custom-toggler {
+    border: none;
+    background: transparent;
+    padding: 5px;
+    cursor: pointer;
+}
+.custom-toggler:focus {
+    outline: none;
+}
+.hamburger-lines {
+    display: block;
+    height: 20px;
+    width: 25px;
+    position: relative;
+}
+.hamburger-lines .line {
+    display: block;
+    height: 3px;
+    width: 100%;
+    border-radius: 3px;
+    background: #333;
+    position: absolute;
+    transition: all 0.3s ease-in-out;
+}
+.hamburger-lines .line1 { top: 0; }
+.hamburger-lines .line2 { top: 8px; }
+.hamburger-lines .line3 { top: 16px; }
+
+/* When menu is open (Bootstrap removes 'collapsed' class) */
+.custom-toggler:not(.collapsed) .line1 {
+    transform: rotate(45deg);
+    top: 8px;
+}
+.custom-toggler:not(.collapsed) .line2 {
+    opacity: 0;
+}
+.custom-toggler:not(.collapsed) .line3 {
+    transform: rotate(-45deg);
+    top: 8px;
+}
+
+/* Adjust Header Height & Menu Padding */
+.main-nav {
+    padding-top: 0.2rem !important;
+    padding-bottom: 0.2rem !important;
+}
+.navbar-nav .nav-item .nav-link {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+    transition: color 0.3s ease;
+}
+.navbar-brand .bukra-logo-img {
+    max-height: 35px; /* slightly smaller logo to fit shorter header */
+}
+.site-header.scrolled #header-logo-img {
+    max-height: 28px;
+}
+/* Completely override and hide the theme's original underline */
+.navbar-nav .nav-item.active .nav-link::after,
+.navbar-nav .nav-link.active::after,
+.navbar-nav .nav-item .nav-link::after,
+.navbar-nav .nav-item:hover .nav-link::after {
+    display: none !important;
+    content: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
